@@ -1,0 +1,1 @@
+export const SERVICE_NAME = 'check-app-frontend';
