@@ -15,13 +15,17 @@ import type { Category, Order, Product } from './types';
 
 export interface AppProps {
   title?: string;
+  initialTab?: 'home' | 'shop' | 'orders' | 'admin';
 }
 
-export const App: React.FC<AppProps> = ({ title = 'check-app-frontend' }) => {
+export const App: React.FC<AppProps> = ({
+  title = 'check-app-frontend',
+  initialTab = 'home',
+}) => {
   const { initAuth } = useAuthStore();
   const { closeCart, fetchCart } = useCartStore();
 
-  const [activeTab, setActiveTab] = useState<'home' | 'shop' | 'orders' | 'admin'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'shop' | 'orders' | 'admin'>(initialTab);
   const [categories, setCategories] = useState<Category[]>(SEED_CATEGORIES);
   const [products, setProducts] = useState<Product[]>(SEED_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

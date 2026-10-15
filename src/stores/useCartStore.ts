@@ -97,7 +97,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       };
     } else {
       currentItems.push({
-        id: 'cart-item-' + Date.now(),
+        id: 'cart-item-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
         productId: product.id,
         productName: product.name,
         productSlug: product.slug,

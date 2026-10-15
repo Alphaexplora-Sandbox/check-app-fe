@@ -9,6 +9,8 @@ interface CheckoutModalProps {
   onClose: () => void;
   onOrderCompleted: (order: Order) => void;
   onViewOrders: () => void;
+  initialStep?: 'form' | 'success';
+  initialOrder?: Order | null;
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
@@ -16,10 +18,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   onOrderCompleted,
   onViewOrders,
+  initialStep = 'form',
+  initialOrder = null,
 }) => {
   const { items, subtotal, estimatedTax, shippingFee, totalAmount, clearCart } = useCartStore();
 
-  const [step, setStep] = useState<'form' | 'success'>('form');
+  const [step, setStep] = useState<'form' | 'success'>(initialStep);
   const [fullName, setFullName] = useState('Jane Customer');
   const [streetAddress, setStreetAddress] = useState('742 Evergreen Terrace');
   const [city, setCity] = useState('Springfield');
@@ -27,7 +31,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(initialOrder);
 
   if (!isOpen) return null;
 

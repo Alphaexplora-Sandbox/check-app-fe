@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { X, Lock, Mail, User as UserIcon, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 
-export const AuthModal: React.FC = () => {
+interface AuthModalProps {
+  initialMode?: 'login' | 'register';
+}
+
+export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) => {
   const { isAuthModalOpen, closeAuthModal, login, register, isLoading, error } = useAuthStore();
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [isRegisterMode, setIsRegisterMode] = useState(initialMode === 'register');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');

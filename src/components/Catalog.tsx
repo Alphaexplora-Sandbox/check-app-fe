@@ -9,6 +9,8 @@ interface CatalogProps {
   selectedCategory: string;
   onSelectCategory: (categorySlug: string) => void;
   onShowToast: (message: string) => void;
+  initialSort?: 'featured' | 'price-asc' | 'price-desc' | 'rating';
+  initialSearch?: string;
 }
 
 export const Catalog: React.FC<CatalogProps> = ({
@@ -17,11 +19,13 @@ export const Catalog: React.FC<CatalogProps> = ({
   selectedCategory,
   onSelectCategory,
   onShowToast,
+  initialSort = 'featured',
+  initialSearch = '',
 }) => {
   const { addItem } = useCartStore();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>(initialSort);
   const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
 
   // 300ms debounce for search query

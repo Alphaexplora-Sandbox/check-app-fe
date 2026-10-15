@@ -40,7 +40,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
     }
   };
 
-  const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: Order['status']) => {
     setIsUpdatingOrder(orderId);
     try {
       await api.updateOrderStatus(orderId, newStatus);
