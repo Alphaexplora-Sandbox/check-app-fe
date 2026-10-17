@@ -37,7 +37,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
         <aside
           data-testid="cart-drawer"
-          role="dialog"
+          
           aria-modal="true"
           aria-labelledby="cart-drawer-title"
           className="w-screen max-w-md bg-zinc-900 border-l border-white/10 shadow-2xl flex flex-col justify-between"

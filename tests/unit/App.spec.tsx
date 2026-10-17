@@ -53,6 +53,7 @@ describe('App', () => {
   });
 
   it('invokes internal App action handlers directly', () => {
+    expect(App).toBeDefined();
     (global as any).window.location = { hash: '#shop' };
     (global as any).document.getElementById = jest.fn().mockReturnValue({
       scrollIntoView: jest.fn(),

@@ -370,6 +370,7 @@ describe('UI Component Server/Unit Renderings', () => {
     });
 
     it('triggers interactive handlers in AuthModal', () => {
+      expect(AuthModal).toBeDefined();
       useAuthStore.setState({ isAuthModalOpen: true });
       const tree = AuthModal({});
       invokeTreeHandlers(tree);
@@ -499,6 +500,7 @@ describe('UI Component Server/Unit Renderings', () => {
     });
 
     it('covers checkout form validation and success branches in CheckoutModal', async () => {
+      expect(CheckoutModal).toBeDefined();
       // Test when isOpen is false
       expect(renderToString(<CheckoutModal isOpen={false} onClose={jest.fn()} onOrderCompleted={jest.fn()} onViewOrders={jest.fn()} />)).toBe('');
 

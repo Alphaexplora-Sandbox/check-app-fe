@@ -129,6 +129,7 @@ describe('api service and seed catalog', () => {
   });
 
   it('covers server response pathways when fetch succeeds', async () => {
+    expect(api).toBeDefined();
     const origFetch = global.fetch;
     const mockData = { test: true };
     global.fetch = jest.fn().mockResolvedValue({

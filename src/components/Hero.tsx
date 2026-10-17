@@ -69,7 +69,7 @@ export const Hero: React.FC<HeroProps> = ({ onExplore, onSelectCategory, categor
           {categories.map((cat) => (
             <div
               key={cat.id}
-              onClick={() => onSelectCategory(cat.slug)}
+              role="button" tabIndex={0} onClick={() => onSelectCategory(cat.slug)}
               className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/80 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 backdrop-blur-md flex flex-col justify-between min-h-[200px]"
             >
               <div className="relative z-10">
