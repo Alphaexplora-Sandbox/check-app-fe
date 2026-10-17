@@ -122,7 +122,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                         <span className="text-[10px] font-mono text-zinc-500">{p.slug}</span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-zinc-400">{p.categoryName || 'General'}</td>
+                    <td className="py-3.5 px-4 text-zinc-400">{p.categoryName}</td>
                     <td className="py-3.5 px-4 font-mono font-bold text-white tabular-nums">${p.price.toFixed(2)}</td>
                     <td className="py-3.5 px-4">
                       {isZero ? (

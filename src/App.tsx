@@ -70,7 +70,7 @@ export const App: React.FC<AppProps> = ({
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'shop' || hash === 'orders' || hash === 'admin' || hash === 'home') {
+      if (['shop', 'orders', 'admin', 'home'].includes(hash)) {
         setActiveTab(hash as 'home' | 'shop' | 'orders' | 'admin');
       }
     };

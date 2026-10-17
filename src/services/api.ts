@@ -341,7 +341,7 @@ export const api = {
     };
   },
 
-  async addToCart(productId: string, quantity = 1): Promise<CartResponse> {
+  async addToCart(productId: string, quantity: number = 1): Promise<CartResponse> {
     try {
       const res = await fetch(`${API_BASE}/api/v1/cart/items`, {
         method: 'POST',
@@ -444,7 +444,7 @@ export const api = {
   },
 
   // Checkout & Orders
-  async checkout(shippingAddress: ShippingAddress, paymentMethod = 'credit_card'): Promise<Order> {
+  async checkout(shippingAddress: ShippingAddress, paymentMethod: string = 'credit_card'): Promise<Order> {
     try {
       const res = await fetch(`${API_BASE}/api/v1/orders/checkout`, {
         method: 'POST',

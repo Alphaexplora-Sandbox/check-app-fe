@@ -236,4 +236,21 @@ describe('useCartStore', () => {
     await useCartStore.getState().clearCart();
     expect(useCartStore.getState().items.length).toBe(0);
   });
+
+  it('covers cart item quantity update and removal fallback without token', async () => {
+    localStorage.removeItem('ecommerce_mock_auth_token');
+    await useCartStore.getState().addItem(SEED_PRODUCTS[0], 2);
+    const id = useCartStore.getState().items[0].id;
+    await useCartStore.getState().updateItemQuantity(id, 4);
+    expect(useCartStore.getState().items[0].quantity).toBe(4);
+    await useCartStore.getState().updateItemQuantity(id, 0);
+    expect(useCartStore.getState().items.length).toBe(0);
+
+    // Remove fallback
+    await useCartStore.getState().addItem(SEED_PRODUCTS[1], 1);
+    const id2 = useCartStore.getState().items[0].id;
+    await useCartStore.getState().removeItem(id2);
+    expect(useCartStore.getState().items.length).toBe(0);
+  });
+
 });

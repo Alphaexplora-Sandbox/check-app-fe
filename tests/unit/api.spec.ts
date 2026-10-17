@@ -199,4 +199,91 @@ describe('api service and seed catalog', () => {
     localStorage.clear();
     await expect(api.getMe()).rejects.toThrow('Unauthorized');
   });
+
+  it('covers remaining branches in api service', async () => {
+    // 1. register with empty fullName fallback
+    const regNoName = await api.register('noname@test.com', 'Pass123!', '');
+    expect(regNoName.user.fullName).toBe('noname');
+
+    // 2. updateStock not found
+    await expect(api.updateStock('non-existent-id', 10)).rejects.toThrow('Product not found');
+
+    // 3. addToCart with non-existent product in local fallback
+    await expect(api.addToCart('non-existent-prod-id', 1)).rejects.toThrow('Product not found');
+
+    // 4. getProducts with sortBy, category match by categoryName
+    const sortRating = await api.getProducts({ sortBy: 'rating', category: 'Audio & Acoustics' });
+    expect(sortRating.length).toBeGreaterThan(0);
+
+    // 5. search matches description and categoryName
+    const descMatch = await api.getProducts({ search: 'noise cancelling' });
+    expect(descMatch.length).toBeGreaterThan(0);
+
+    const catNameMatch = await api.getProducts({ search: 'acoustic' });
+    expect(catNameMatch.length).toBeGreaterThan(0);
+
+    // 6. getCart with shipping fee when subtotal is between 1 and 149
+    await api.clearCart();
+    await api.addToCart(SEED_PRODUCTS[5].id, 1);
+    const cartLow = await api.getCart();
+    expect(cartLow.shippingFee).toBe(15.0);
+
+    // 7. updateCartItem for item not found in cart
+    await api.updateCartItem('unknown-item-id', 5);
+
+    // 8. updateOrderStatus for order not found
+    await expect(api.updateOrderStatus('unknown-order-id', 'Shipped')).rejects.toThrow('Order not found');
+
+    // 9. error without message in login / register
+    const origFetch = global.fetch;
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({}),
+    });
+
+    try {
+      await expect(api.login('custom@bad.com', 'bad')).rejects.toThrow('Invalid credentials');
+      await expect(api.register('custom@bad.com', 'bad', 'Name')).rejects.toThrow('Registration failed');
+    } finally {
+      global.fetch = origFetch;
+    }
+  });
+
+  it('covers server response branches with varied inputs', async () => {
+    const origFetch = global.fetch;
+    try {
+      global.fetch = jest.fn().mockImplementation(async (url: string) => {
+        if (url.includes('/auth/login') || url.includes('/auth/register')) {
+          return { ok: true, json: async () => ({ token: 'mock-t', user: { id: 'u1', role: 'Customer' } }) };
+        }
+        if (url.includes('/auth/me')) {
+          return { ok: true, json: async () => ({ id: 'u1', email: 'test@me.com' }) };
+        }
+        if (url.includes('/products?')) {
+          return { ok: true, json: async () => SEED_PRODUCTS };
+        }
+        if (url.includes('/cart')) {
+          return { ok: true, json: async () => ({ items: [], subtotal: 0, estimatedTax: 0, shippingFee: 0, totalAmount: 0 }) };
+        }
+        if (url.includes('/orders')) {
+          return { ok: true, json: async () => [] };
+        }
+        return { ok: true, json: async () => ({}) };
+      }) as unknown as typeof fetch;
+
+      localStorage.setItem('ecommerce_mock_auth_token', 'valid-token');
+      await api.getMe();
+      await api.getProducts({ sortBy: 'price-desc' });
+      await api.addToCart('prod-1', 1);
+      await api.updateCartItem('item-1', 2);
+      await api.removeCartItem('item-1');
+      await api.clearCart();
+      await api.checkout({ fullName: 'Buyer', streetAddress: '123', city: 'C', postalCode: '1', country: 'US' });
+      await api.getOrders();
+      await api.updateOrderStatus('ord-1', 'Processing');
+    } finally {
+      global.fetch = origFetch;
+    }
+  });
+
 });

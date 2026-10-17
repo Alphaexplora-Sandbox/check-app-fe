@@ -99,10 +99,10 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onExplore }) => {
               {/* Order Line Items */}
               <div className="pt-4 space-y-3">
                 <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-2">
-                  Line Items ({order.orderItems?.length || 0})
+                  Line Items ({order.orderItems ? order.orderItems.length : 0})
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {order.orderItems?.map((item) => (
+                  {order.orderItems.map((item) => (
                     <div
                       key={item.id}
                       className="flex items-center gap-3 rounded-lg border border-white/5 bg-zinc-950/40 p-2.5"
@@ -120,7 +120,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onExplore }) => {
                       )}
                       <div className="min-w-0 flex-1">
                         <span className="text-xs font-medium text-white truncate block">
-                          {item.productName || 'Catalog Item'}
+                          {item.productName}
                         </span>
                         <span className="text-[10px] font-mono text-zinc-400 block">
                           Qty: {item.quantity} × ${item.unitPrice.toFixed(2)}

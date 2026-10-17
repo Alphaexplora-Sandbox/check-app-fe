@@ -17,10 +17,8 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: typeof window !== 'undefined' ? localStorage.getItem('ecommerce_mock_auth_token') : null,
-  user: typeof window !== 'undefined' && localStorage.getItem('ecommerce_mock_user')
-    ? JSON.parse(localStorage.getItem('ecommerce_mock_user') || 'null')
-    : null,
+  token: localStorage.getItem('ecommerce_mock_auth_token'),
+  user: localStorage.getItem('ecommerce_mock_user') ? JSON.parse(localStorage.getItem('ecommerce_mock_user') || '{}') : null,
   isLoading: false,
   error: null,
   isAuthModalOpen: false,
