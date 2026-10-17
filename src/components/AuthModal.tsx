@@ -27,7 +27,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
 
     try {
       if (isRegisterMode) {
-        await register(email, password, fullName || email.split('@')[0]);
+        await register(email, password, fullName ? fullName : email.split('@')[0]);
       } else {
         await login(email, password);
       }

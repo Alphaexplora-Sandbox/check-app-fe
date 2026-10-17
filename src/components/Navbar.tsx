@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
             >
               Orders
             </a>
-            {user?.role === 'Admin' && (
+            {(user != null && user.role === 'Admin') && (
               <a
                 href="#admin"
                 role="link"
@@ -159,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
         >
           Orders
         </a>
-        {user?.role === 'Admin' && (
+        {(user != null && user.role === 'Admin') && (
           <a
             href="#admin"
             role="link"
