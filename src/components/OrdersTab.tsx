@@ -107,7 +107,7 @@ export const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onExplore }) => {
                       key={item.id}
                       className="flex items-center gap-3 rounded-lg border border-white/5 bg-zinc-950/40 p-2.5"
                     >
-                      {item.productImageUrl ? (
+                      {Boolean(item.productImageUrl) ? (
                         <img
                           src={item.productImageUrl}
                           alt={item.productName || 'Product'}

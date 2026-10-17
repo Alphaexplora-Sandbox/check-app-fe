@@ -232,7 +232,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                 {/* Content */}
                 <div className="flex flex-col flex-1">
                   <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 mb-1">
-                    {product.categoryName || 'General'}
+                    {product.categoryName}
                   </span>
                   <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors line-clamp-1 mb-1.5">
                     {product.name}

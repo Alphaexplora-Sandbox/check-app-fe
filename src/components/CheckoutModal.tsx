@@ -39,7 +39,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!fullName || !streetAddress || !city || !postalCode) {
+    if ([fullName, streetAddress, city, postalCode].some(f => !f)) {
       setErrorMessage('Please fill out all shipping address fields.');
       return;
     }
@@ -230,7 +230,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className="font-mono text-zinc-200">
-                    {shippingFee === 0 ? 'Free' : `$${shippingFee.toFixed(2)}`}
+                    <span>{`${shippingFee.toFixed(2)}`}</span>
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/5">

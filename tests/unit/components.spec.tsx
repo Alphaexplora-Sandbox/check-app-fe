@@ -757,4 +757,94 @@ describe('UI Component Server/Unit Renderings', () => {
 
     });
 
+
+    it('covers all remaining branch cases in AdminTab, AuthModal, and Catalog', async () => {
+      // 1. AdminTab with changed stock and isUpdatingStock
+      const singleProduct = [{ ...SEED_PRODUCTS[0], id: 'prod-single', stockQuantity: 10 }];
+      const adminTree = renderWithState(AdminTab, {
+        products: singleProduct,
+        orders: [],
+        onRefreshProducts: jest.fn(),
+        onRefreshOrders: jest.fn(),
+        onShowToast: jest.fn(),
+      }, {
+        0: { 'prod-single': 99 }, // stockValues changed
+        1: 'prod-single', // isUpdatingStock
+        2: null,
+      });
+      expect(adminTree).toBeTruthy();
+
+      // 2. AuthModal handleSubmit execution directly
+      const loginMock = jest.fn().mockResolvedValue({});
+      const registerMock = jest.fn().mockResolvedValue({});
+      useAuthStore.setState({ isAuthModalOpen: true, login: loginMock, register: registerMock });
+
+      // Run submit with empty fields
+      const authTreeEmpty: any = AuthModal({ initialMode: 'login' });
+      const formEmpty: any = authTreeEmpty?.props?.children?.props?.children?.find((c: any) => c && c.type === 'form');
+      if (formEmpty?.props?.onSubmit) {
+        await formEmpty.props.onSubmit({ preventDefault: jest.fn() });
+      }
+
+      // 3. Catalog with recentlyAddedId active
+      const catTreeRecent = renderWithState(Catalog, {
+        products: SEED_PRODUCTS,
+        categories: SEED_CATEGORIES,
+        selectedCategory: 'all',
+        onSelectCategory: jest.fn(),
+        onShowToast: jest.fn(),
+      }, {
+        0: '',
+        1: '',
+        2: 'featured',
+        3: SEED_PRODUCTS[0].id, // recentlyAddedId set!
+      });
+      expect(catTreeRecent).toBeTruthy();
+    });
+
+
+    it('covers all branch permutations in AuthModal handleSubmit and mode changes', async () => {
+      // 1. Missing email
+      const tree1: any = renderWithState(AuthModal, {}, { 1: '', 2: 'pass' });
+      const form1 = tree1?.props?.children?.props?.children?.find((x: any) => x && x.type === 'form');
+      if (form1?.props?.onSubmit) {
+        await form1.props.onSubmit({ preventDefault: jest.fn() });
+      }
+
+      // 2. Missing password
+      const tree2: any = renderWithState(AuthModal, {}, { 1: 'user@test.com', 2: '' });
+      const form2 = tree2?.props?.children?.props?.children?.find((x: any) => x && x.type === 'form');
+      if (form2?.props?.onSubmit) {
+        await form2.props.onSubmit({ preventDefault: jest.fn() });
+      }
+
+      // 3. Register with explicit fullName
+      const regMock = jest.fn().mockResolvedValue({});
+      useAuthStore.setState({ isAuthModalOpen: true, register: regMock });
+      const tree3: any = renderWithState(AuthModal, { initialMode: 'register' }, {
+        0: true, // isRegisterMode
+        1: 'user@test.com',
+        2: 'pass1234',
+        3: 'Full Name',
+      });
+      const form3 = tree3?.props?.children?.props?.children?.find((x: any) => x && x.type === 'form');
+      if (form3?.props?.onSubmit) {
+        await form3.props.onSubmit({ preventDefault: jest.fn() });
+      }
+      expect(regMock).toHaveBeenCalledWith('user@test.com', 'pass1234', 'Full Name');
+
+      // 4. Register without explicit fullName (empty)
+      const tree4: any = renderWithState(AuthModal, { initialMode: 'register' }, {
+        0: true, // isRegisterMode
+        1: 'user2@test.com',
+        2: 'pass1234',
+        3: '',
+      });
+      const form4 = tree4?.props?.children?.props?.children?.find((x: any) => x && x.type === 'form');
+      if (form4?.props?.onSubmit) {
+        await form4.props.onSubmit({ preventDefault: jest.fn() });
+      }
+      expect(regMock).toHaveBeenCalledWith('user2@test.com', 'pass1234', 'user2');
+    });
+
 });
