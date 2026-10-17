@@ -145,7 +145,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                         min="0"
                         aria-label={`Stock quantity for ${p.name}`}
                         value={currentVal}
-                        onChange={(e) => handleStockChange(p.id, parseInt(e.target.value) || 0)}
+                        onChange={(e) => handleStockChange(p.id, Number(e.target.value))}
                         className="w-20 rounded-md border border-white/10 bg-zinc-950 px-2.5 py-1 text-xs font-mono text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </td>

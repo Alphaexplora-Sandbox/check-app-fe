@@ -20,14 +20,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
     e.preventDefault();
     setLocalError(null);
 
-    if (!email || !password) {
+    if (email.length === 0 || password.length === 0) {
       setLocalError('Please fill in both email and password.');
       return;
     }
 
     try {
       if (isRegisterMode) {
-        await register(email, password, fullName ? fullName : email.split('@')[0]);
+        await register(email, password, (fullName.length > 0 ? fullName : email.split('@')[0]));
       } else {
         await login(email, password);
       }
@@ -87,7 +87,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
             className="mb-4 flex items-center gap-2.5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300"
           >
             <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
-            <span>{error || localError}</span>
+            <span>{error ?? localError}</span>
           </div>
         )}
 

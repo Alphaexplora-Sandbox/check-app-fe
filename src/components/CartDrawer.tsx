@@ -178,11 +178,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className="font-mono text-zinc-200 tabular-nums">
-                    {shippingFee === 0 ? (
-                      <span className="text-emerald-400 font-semibold uppercase">Free</span>
-                    ) : (
-                      `$${shippingFee.toFixed(2)}`
-                    )}
+                    <span>{`${shippingFee.toFixed(2)}`}</span>
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/5">

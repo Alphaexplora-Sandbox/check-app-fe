@@ -286,4 +286,22 @@ describe('api service and seed catalog', () => {
     }
   });
 
+
+  it('covers remaining branches in api.ts', async () => {
+    // 1. addToCart with quantity defaulting
+    await api.clearCart();
+    await api.addToCart(SEED_PRODUCTS[0].id);
+
+    // 2. updateCartItem with negative or zero quantity
+    const cart = await api.getCart();
+    const id = cart.items[0].id;
+    await api.updateCartItem(id, -1);
+    const cartAfter = await api.getCart();
+    expect(cartAfter.items.length).toBe(0);
+
+    // 3. getProducts with rating sort
+    const ratingSorted = await api.getProducts({ sortBy: 'rating' });
+    expect(ratingSorted.length).toBeGreaterThan(0);
+  });
+
 });
