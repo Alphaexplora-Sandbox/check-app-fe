@@ -13,7 +13,7 @@ const VIEWPORTS = [
 // Nothing is masked by default. Mask regions that change on every load - a
 // clock, a rotating banner, a random avatar - so they do not fail the check:
 // const mask = (page: Page) => [page.locator('[data-testid="live-clock"]')];
-const mask = (_page: Page) => [];
+const mask = () => [];
 
 /**
  * Compare with the approved reference, or record the first one.
@@ -25,7 +25,7 @@ const mask = (_page: Page) => [];
  */
 async function expectApprovedScreenshot(page: Page, file: string) {
   const reference = join(test.info().project.testDir, '__visual__', file);
-  const options = { fullPage: true, animations: 'disabled' as const, mask: mask(page) };
+  const options = { fullPage: true, animations: 'disabled' as const, mask: mask() };
   if (!existsSync(reference)) {
     await page.screenshot({ ...options, path: reference });
     test.info().annotations.push({
