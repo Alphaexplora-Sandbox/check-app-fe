@@ -156,11 +156,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
             disabled={isLoading}
             className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-semibold text-zinc-950 transition-all hover:bg-emerald-400 active:scale-[0.99] disabled:opacity-50 shadow-lg shadow-emerald-500/20"
           >
-            {isLoading
-              ? 'Processing...'
-              : isRegisterMode
-              ? 'Create Account'
-              : 'Log In'}
+            {isLoading ? 'Processing...' : btnText}
           </button>
         </form>
 
