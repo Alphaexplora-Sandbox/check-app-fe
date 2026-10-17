@@ -67,9 +67,10 @@ export const Hero: React.FC<HeroProps> = ({ onExplore, onSelectCategory, categor
         {/* Bento Category Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
           {categories.map((cat) => (
-            <div
+            <button
               key={cat.id}
-              role="button" tabIndex={0} onClick={() => onSelectCategory(cat.slug)}
+              type="button"
+              onClick={() => onSelectCategory(cat.slug)}
               className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/80 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 backdrop-blur-md flex flex-col justify-between min-h-[200px]"
             >
               <div className="relative z-10">
@@ -92,7 +93,7 @@ export const Hero: React.FC<HeroProps> = ({ onExplore, onSelectCategory, categor
                   {cat.slug}
                 </span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

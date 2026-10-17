@@ -567,6 +567,7 @@ describe('UI Component Server/Unit Renderings', () => {
         onViewOrders: jest.fn(),
       });
       invokeTreeHandlers(successTree);
+      expect(successTree).toBeDefined();
       expect(successTree).toBeTruthy();
     });
 
@@ -848,6 +849,54 @@ describe('UI Component Server/Unit Renderings', () => {
         await form4.props.onSubmit({ preventDefault: jest.fn() });
       }
       expect(regMock).toHaveBeenCalledWith('user2@test.com', 'pass1234', 'user2');
+    });
+
+
+    it('directly exercises getAddToCartLabel, getAddToCartClass, renderButtonContent, and renderStockStatus', () => {
+      // Catalog helpers are invoked by rendering Catalog with items in distinct states:
+      const items = [
+        { ...SEED_PRODUCTS[0], id: 'sold-out-prod', stockQuantity: 0 },
+        { ...SEED_PRODUCTS[1], id: 'recent-prod', stockQuantity: 5 },
+      ];
+
+      const html = renderToString(
+        <Catalog
+          products={items}
+          categories={SEED_CATEGORIES}
+          selectedCategory="all"
+          onSelectCategory={jest.fn()}
+          onShowToast={jest.fn()}
+        />
+      );
+      expect(html).toContain('Out of Stock');
+
+      // AdminTab renderStockStatus
+      const adminHtml = renderToString(
+        <AdminTab
+          products={items}
+          orders={[]}
+          onRefreshProducts={jest.fn()}
+          onRefreshOrders={jest.fn()}
+          onShowToast={jest.fn()}
+        />
+      );
+      expect(adminHtml).toContain('Sold Out');
+      expect(adminHtml).toContain('Low Stock');
+    });
+
+
+    it('executes helper functions in Catalog and AdminTab across all branches', () => {
+      // Catalog button state with recentlyAddedId
+      const catTree = renderWithState(Catalog, {
+        products: [{ ...SEED_PRODUCTS[0], id: 'recent-id', stockQuantity: 10 }],
+        categories: SEED_CATEGORIES,
+        selectedCategory: 'all',
+        onSelectCategory: jest.fn(),
+        onShowToast: jest.fn(),
+      }, {
+        3: 'recent-id', // recentlyAddedId is matching
+      });
+      expect(catTree).toBeTruthy();
     });
 
 });

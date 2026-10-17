@@ -253,7 +253,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={isSoldOut}
-                      aria-label={isSoldOut ? `Out of Stock - ${product.name}` : (recentlyAddedId === product.id ? `Added ${product.name}` : `Add to Cart - ${product.name}`)}
+                      aria-label={`Product action for ${product.name}`}
                       className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2.5 text-xs font-semibold transition-all min-h-[44px] ${
                         isSoldOut
                           ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/5'

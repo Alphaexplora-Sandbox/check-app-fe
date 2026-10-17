@@ -13,6 +13,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
+  const btnText = isRegisterMode ? 'Create Account' : 'Log In';
 
   if (!isAuthModalOpen) return null;
 
