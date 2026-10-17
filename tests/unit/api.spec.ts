@@ -281,6 +281,7 @@ describe('api service and seed catalog', () => {
       await api.checkout({ fullName: 'Buyer', streetAddress: '123', city: 'C', postalCode: '1', country: 'US' });
       await api.getOrders();
       await api.updateOrderStatus('ord-1', 'Processing');
+      expect(localStorage.getItem('ecommerce_mock_auth_token')).toBe('valid-token');
     } finally {
       global.fetch = origFetch;
     }

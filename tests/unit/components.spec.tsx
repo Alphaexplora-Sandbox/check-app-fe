@@ -565,6 +565,7 @@ describe('UI Component Server/Unit Renderings', () => {
         onViewOrders: jest.fn(),
       });
       invokeTreeHandlers(successTree);
+      expect(successTree).toBeTruthy();
     });
 
     it('covers AuthModal registration mode and demo credential filling', async () => {

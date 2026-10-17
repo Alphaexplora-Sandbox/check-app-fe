@@ -459,7 +459,7 @@ export const api = {
       // Fallback
     }
     const cart = await this.getCart();
-    const orderNum = 'ECM-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const orderNum = 'ECM-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Date.now().toString(36).substring(2, 8).toUpperCase();
     const newOrder: Order = {
       id: 'ord-' + Date.now(),
       userId: 'mock-user-1',

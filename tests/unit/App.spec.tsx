@@ -104,6 +104,7 @@ describe('App', () => {
     (global as any).window.location = { hash: '#admin' };
     const adminEl: any = App({ initialTab: 'admin' });
     const main = adminEl.props.children[1];
+    expect(main).toBeTruthy();
     const adminTab = Array.isArray(main.props.children) ? main.props.children.find((c: any) => c && c.props && c.props.onRefreshProducts) : main.props.children;
     if (adminTab) {
       adminTab.props.onRefreshProducts();

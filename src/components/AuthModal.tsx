@@ -51,7 +51,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode = 'login' }) =
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        role="dialog"
+        
         aria-modal="true"
         aria-labelledby="auth-modal-title"
         className="relative w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 sm:p-8 shadow-2xl"

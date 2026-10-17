@@ -64,7 +64,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       const fallbackOrder: Order = {
         id: 'ord-' + Date.now(),
         userId: '22222222-2222-2222-2222-222222222222',
-        orderNumber: `ECM-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        orderNumber: `ECM-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Date.now().toString(36).toUpperCase()}`,
         totalAmount,
         status: 'Processing',
         shippingAddress: shipping,
@@ -93,7 +93,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
       <div
-        role="dialog"
+        
         aria-modal="true"
         aria-labelledby="checkout-modal-title"
         className="relative w-full max-w-xl rounded-2xl border border-white/10 bg-zinc-900 p-6 sm:p-8 shadow-2xl my-8"

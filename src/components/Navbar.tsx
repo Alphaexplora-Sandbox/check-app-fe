@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
           <nav className="hidden md:flex items-center gap-1" aria-label="Main Navigation">
             <a
               href="#shop"
-              role="link"
+              
               onClick={(e) => {
                 e.preventDefault();
                 setActiveTab('shop');
@@ -54,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
             </a>
             <a
               href="#orders"
-              role="link"
+              
               onClick={(e) => {
                 e.preventDefault();
                 setActiveTab('orders');
@@ -70,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
             {(user != null && user.role === 'Admin') && (
               <a
                 href="#admin"
-                role="link"
+                
                 onClick={(e) => {
                   e.preventDefault();
                   setActiveTab('admin');
@@ -135,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
       <div className="flex md:hidden border-t border-white/5 bg-zinc-900/60 px-4 py-2 justify-around">
         <a
           href="#shop"
-          role="link"
+          
           onClick={(e) => {
             e.preventDefault();
             setActiveTab('shop');
@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
         </a>
         <a
           href="#orders"
-          role="link"
+          
           onClick={(e) => {
             e.preventDefault();
             setActiveTab('orders');
@@ -162,7 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, brandTi
         {(user != null && user.role === 'Admin') && (
           <a
             href="#admin"
-            role="link"
+            
             onClick={(e) => {
               e.preventDefault();
               setActiveTab('admin');
