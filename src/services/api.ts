@@ -10,12 +10,20 @@ import type {
 } from '../types';
 
 function resolveApiBase(): string {
+  if (typeof window !== 'undefined' && window.location) {
+    const host = window.location.hostname;
+    if (host.includes('uat')) {
+      return 'https://check-app-backend-uat.onrender.com';
+    }
+    if (host.includes('vercel.app')) {
+      return 'https://check-app-backend-main.onrender.com';
+    }
+  }
   if (typeof process !== 'undefined' && process.env && process.env.VITE_API_URL) {
     return process.env.VITE_API_URL.replace(/\/$/, '');
   }
   return 'http://localhost:5000';
 }
-
 const API_BASE = resolveApiBase();
 
 function getAuthHeader(): Record<string, string> {
