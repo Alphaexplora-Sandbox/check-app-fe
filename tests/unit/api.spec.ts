@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { api, resolveApiBase, SEED_CATEGORIES, SEED_PRODUCTS } from '../../src/services/api';
 
 describe('api service and seed catalog', () => {
