@@ -84,3 +84,32 @@ export interface Order {
   createdAt: string;
   orderItems: OrderItem[];
 }
+
+export interface SavedPaymentMethod {
+  id: string;
+  userId: string;
+  cardHolderName: string;
+  cardNumberMasked: string;
+  expiryMonth: string;
+  expiryYear: string;
+  brand: string;
+  isDefault: boolean;
+  createdAt: string;
+}
+
+export interface OrderMilestone {
+  title: string;
+  description: string;
+  timestamp: string;
+  completed: boolean;
+  current: boolean;
+}
+
+export interface OrderTracking {
+  orderId: string;
+  orderNumber: string;
+  status: string;
+  orderDate: string;
+  shippingAddress: string;
+  milestones: OrderMilestone[];
+}
