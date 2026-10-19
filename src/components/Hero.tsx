@@ -25,12 +25,12 @@ export const Hero: React.FC<HeroProps> = ({ onExplore, onSelectCategory, categor
   return (
     <section className="relative overflow-hidden pt-8 pb-14 border-b border-white/5">
       {/* Subtle Ambient Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/15 blur-[130px] rounded-full pointer-events-none animate-ambient-pulse" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Editorial Heading */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-medium text-emerald-400 mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-medium text-emerald-400 mb-6 animate-float-gentle">
             <Sparkles className="h-3.5 w-3.5" />
             <span>Precision Engineering & Minimalist Design</span>
           </div>
