@@ -1,4 +1,6 @@
 import type {
+  SavedPaymentMethod,
+  OrderTracking,
   AuthResponse,
   Category,
   Order,
@@ -532,5 +534,201 @@ export const api = {
       localStorage.setItem('mock_orders', JSON.stringify(orders));
     }
     return order;
+  },
+  // Saved Payment Methods
+  async getPaymentMethods(): Promise<SavedPaymentMethod[]> {
+    try {
+      const res = await fetch(API_BASE + "/api/v1/payments/methods", {
+        headers: getAuthHeader(),
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem("mock_saved_cards") : null;
+    return raw
+      ? JSON.parse(raw)
+      : [
+          {
+            id: "44444444-4444-4444-4444-444444444444",
+            userId: "22222222-2222-2222-2222-222222222222",
+            cardHolderName: "Customer Demo",
+            cardNumberMasked: '**** **** **** 4242',
+            expiryMonth: "12",
+            expiryYear: "2028",
+            brand: "Visa",
+            isDefault: true,
+            createdAt: new Date().toISOString(),
+          },
+        ];
+  },
+
+  async createPaymentMethod(card: { cardHolderName: string; cardNumber: string; expiryMonth: string; expiryYear: string; brand?: string; isDefault?: boolean }): Promise<SavedPaymentMethod> {
+    try {
+      const res = await fetch(API_BASE + "/api/v1/payments/methods", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getAuthHeader() },
+        body: JSON.stringify(card),
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    const digits = card.cardNumber.replace(/\D/g, "");
+    const newCard: SavedPaymentMethod = {
+      id: "card-" + Date.now(),
+      userId: "22222222-2222-2222-2222-222222222222",
+      cardHolderName: card.cardHolderName,
+      cardNumberMasked: '**** **** **** ' + (digits.slice(-4) || '4242'),
+      expiryMonth: card.expiryMonth.padStart(2, "0"),
+      expiryYear: card.expiryYear,
+      brand: card.brand || (digits.startsWith("5") ? "Mastercard" : "Visa"),
+      isDefault: Boolean(card.isDefault),
+      createdAt: new Date().toISOString(),
+    };
+    const cards = await this.getPaymentMethods();
+    if (newCard.isDefault) {
+      cards.forEach((c) => (c.isDefault = false));
+    }
+    cards.push(newCard);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("mock_saved_cards", JSON.stringify(cards));
+    }
+    return newCard;
+  },
+
+  async deletePaymentMethod(id: string): Promise<void> {
+    try {
+      await fetch(API_BASE + "/api/v1/payments/methods/" + id, {
+        method: "DELETE",
+        headers: getAuthHeader(),
+      });
+    } catch {
+      // Fallback
+    }
+    const cards = (await this.getPaymentMethods()).filter((c) => c.id !== id);
+    if (cards.length > 0 && !cards.some((c) => c.isDefault)) {
+      cards[0].isDefault = true;
+    }
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("mock_saved_cards", JSON.stringify(cards));
+    }
+  },
+
+  async setDefaultPaymentMethod(id: string): Promise<SavedPaymentMethod> {
+    try {
+      const res = await fetch(API_BASE + "/api/v1/payments/methods/" + id + "/default", {
+        method: "PATCH",
+        headers: getAuthHeader(),
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    const cards = await this.getPaymentMethods();
+    const target = cards.find((c) => c.id === id);
+    if (!target) throw new Error("Card not found");
+    cards.forEach((c) => (c.isDefault = c.id === id));
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("mock_saved_cards", JSON.stringify(cards));
+    }
+    return target;
+  },
+
+  async cancelOrder(orderId: string, reason?: string): Promise<Order> {
+    try {
+      const res = await fetch(API_BASE + "/api/v1/orders/" + orderId + "/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getAuthHeader() },
+        body: JSON.stringify({ reason: reason || "Customer requested cancellation" }),
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    const orders = await this.getOrders();
+    let order = orders.find((o) => o.id === orderId);
+    if (!order) {
+      order = { id: orderId, userId: "22222222-2222-2222-2222-222222222222", orderNumber: "ECM-20261020-001", totalAmount: 189.0, status: "Cancelled", paymentMethod: "saved_card", createdAt: new Date().toISOString(), orderItems: [] };
+      orders.push(order);
+    } else {
+      order.status = "Cancelled";
+    }
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("mock_orders", JSON.stringify(orders));
+    }
+    return order;
+  },
+
+  async trackOrder(orderId: string): Promise<OrderTracking> {
+    try {
+      const res = await fetch(API_BASE + "/api/v1/orders/" + orderId + "/track", {
+        headers: getAuthHeader(),
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    const orders = await this.getOrders();
+    const order = orders.find((o) => o.id === orderId) || {
+      id: orderId,
+      orderNumber: "ECM-20261020-001",
+      status: "Processing" as const,
+      createdAt: new Date().toISOString(),
+      shippingAddress: { fullName: "Customer Demo", streetAddress: "742 Evergreen", city: "Springfield", postalCode: "97477" },
+      paymentMethod: "credit_card",
+      totalAmount: 189.0,
+      orderItems: [],
+    };
+    const isCancelled = order.status === "Cancelled";
+    return {
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      orderDate: order.createdAt,
+      shippingAddress: typeof order.shippingAddress === "string" ? order.shippingAddress : (order.shippingAddress?.streetAddress || "742 Evergreen"),
+      milestones: [
+        {
+          title: "Order Placed",
+          description: "Order " + order.orderNumber + " received and registered.",
+          timestamp: order.createdAt,
+          completed: true,
+          current: order.status === "Pending" && !isCancelled,
+        },
+        {
+          title: "Payment Confirmed",
+          description: "Payment via " + order.paymentMethod + " verified successfully.",
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          completed: order.status !== "Pending" || isCancelled,
+          current: order.status === "Processing" && !isCancelled,
+        },
+        ...(isCancelled
+          ? [
+              {
+                title: "Order Cancelled",
+                description: "Order cancelled by customer. Product stock restocked and full refund initiated.",
+                timestamp: new Date().toISOString(),
+                completed: true,
+                current: true,
+              },
+            ]
+          : [
+              {
+                title: "In Transit",
+                description: "Package scanned at distribution center and en route to destination.",
+                timestamp: new Date(Date.now() - 1800000).toISOString(),
+                completed: order.status === "Shipped" || order.status === "Delivered",
+                current: order.status === "Shipped",
+              },
+              {
+                title: "Delivered",
+                description: "Package safely delivered and handed to customer.",
+                timestamp: new Date().toISOString(),
+                completed: order.status === "Delivered",
+                current: order.status === "Delivered",
+              },
+            ]),
+      ],
+    };
   },
 };
