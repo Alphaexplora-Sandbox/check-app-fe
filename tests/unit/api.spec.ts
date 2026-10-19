@@ -1,4 +1,4 @@
-import { api, SEED_CATEGORIES, SEED_PRODUCTS } from '../../src/services/api';
+import { api, resolveApiBase, SEED_CATEGORIES, SEED_PRODUCTS } from '../../src/services/api';
 
 describe('api service and seed catalog', () => {
   beforeEach(() => {
@@ -304,6 +304,21 @@ describe('api service and seed catalog', () => {
     // 3. getProducts with rating sort
     const ratingSorted = await api.getProducts({ sortBy: 'rating' });
     expect(ratingSorted.length).toBeGreaterThan(0);
+  });
+
+
+  it('covers resolveApiBase host routing branches for uat and vercel.app', () => {
+    const origWindow = global.window;
+    try {
+      (global as any).window = { location: { hostname: 'uat-check-app-frontend.vercel.app' } };
+      // Test with uat host
+      expect(resolveApiBase()).toContain('check-app-backend-uat.onrender.com');
+
+      (global as any).window = { location: { hostname: 'check-app-frontend.vercel.app' } };
+      expect(resolveApiBase()).toContain('check-app-backend-main.onrender.com');
+    } finally {
+      global.window = origWindow;
+    }
   });
 
 });

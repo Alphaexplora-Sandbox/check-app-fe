@@ -9,9 +9,9 @@ import type {
   User,
 } from '../types';
 
-function resolveApiBase(): string {
+export function resolveApiBase(): string {
   if (typeof window !== 'undefined' && window.location) {
-    const host = window.location.hostname;
+    const host = window.location.hostname || '';
     if (host.includes('uat')) {
       return 'https://check-app-backend-uat.onrender.com';
     }
