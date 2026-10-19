@@ -5,7 +5,7 @@ import { api } from '../../src/services/api';
  * When false: Triggers intentional assertion failure simulating a quality gate block.
  * When true: Restores verified assertion, achieving 100% test pass.
  */
-export const SIMULATION_FIXED = true;
+export const SIMULATION_FIXED = false;
 
 describe('SIMULATED_FAILURE: Express Checkout Card Masking & Stock Restock Validation', () => {
   it('TC-SIM-FE-001: verifies saved payment card masking during 1-click checkout', async () => {
