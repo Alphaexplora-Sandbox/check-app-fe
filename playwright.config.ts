@@ -1,19 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.E2E_BASE_URL;
-
-if (!baseURL) {
-  throw new Error(
-    'E2E_BASE_URL is not set. The end-to-end suite runs against a deployed environment, so there is no default to fall back to.',
-  );
-}
+const baseURL = process.env.E2E_BASE_URL || process.env.BASE_URL || 'http://localhost:3000';
 
 const vercelAutomationBypassSecret =
   process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  testMatch: '**/*.e2e-spec.ts',
+  testMatch: ['**/*.e2e-spec.ts', '**/*.spec.ts'],
   // Approved screenshots live in ONE flat folder. playwright-e2e.yml
   // downloads the baselines approved in ALPHACI to exactly this path, so
   // the template must not grow per-spec or per-platform subfolders.
@@ -56,4 +50,14 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
+  ...(!process.env.E2E_BASE_URL
+    ? {
+        webServer: {
+          command: 'npm run start',
+          url: 'http://localhost:3000',
+          reuseExistingServer: true,
+          timeout: 60000,
+        },
+      }
+    : {}),
 });
